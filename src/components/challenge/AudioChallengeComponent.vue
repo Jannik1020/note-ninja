@@ -1,11 +1,23 @@
 <script setup lang="ts">
 const props = defineProps<{ prompt: string }>()
+const audioContext = new AudioContext();
+function handleClickPlayAudio() {
+  fetch('audio/C4v10.mp3')
+    .then((response) => response.arrayBuffer())
+    .then((buffer) => audioContext.decodeAudioData(buffer))
+    .then((sample) => {
+      const source = audioContext.createBufferSource()
+      source.buffer = sample
+      source.connect(audioContext.destination)
+      source.start(0)
+    })
+}
 </script>
 
 <template>
   <div class="challengeContainer">
     <h1>{{ props.prompt }}</h1>
-    <div id="btnPlayAudio">
+    <div id="btnPlayAudio" @click="handleClickPlayAudio">
       <p>Play Audio</p>
       <span class="material-symbols-outlined">play_arrow</span>
       <div class="padding"></div>
