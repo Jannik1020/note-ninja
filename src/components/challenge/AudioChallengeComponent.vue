@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+
 const props = defineProps<{ prompt: string }>()
 
 let audioContext: AudioContext | null = null
@@ -7,23 +9,34 @@ function getAudioContext() {
   if (!audioContext) {
     audioContext = new AudioContext()
   }
-  return audioContext;
+  return audioContext
+}
+
+let buffer: AudioBuffer | null = null
+
+async function load(ctx: AudioContext) {
+  if (buffer) return buffer
+
+  const res = await fetch('audio/C4v10.mp3')
+  const arr = await res.arrayBuffer()
+  buffer = await ctx.decodeAudioData(arr)
+  return buffer
 }
 
 async function handleClickPlayAudio() {
-  const ctx = getAudioContext();
+  const ctx = getAudioContext()
 
   await ctx.resume()
 
-  const response = await fetch('audio/C4v10.mp3')
-  const buffer = await response.arrayBuffer()
-  const sample = await ctx.decodeAudioData(buffer)
-
   const source = ctx.createBufferSource()
-  source.buffer = sample
+  source.buffer = buffer;
   source.connect(ctx.destination)
   source.start(0)
 }
+
+onMounted(async () => {
+  await load(getAudioContext());
+})
 </script>
 
 <template>
