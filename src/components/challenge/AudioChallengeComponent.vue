@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 
 const props = defineProps<{ prompt: string }>()
+const emit = defineEmits<{(e: 'play'):void}>();
 
 let audioContext: AudioContext | null = null
 
@@ -23,17 +24,6 @@ async function load(ctx: AudioContext) {
   return buffer
 }
 
-async function handleClickPlayAudio() {
-  const ctx = getAudioContext()
-
-  await ctx.resume()
-
-  const source = ctx.createBufferSource()
-  source.buffer = buffer;
-  source.connect(ctx.destination)
-  source.start(0)
-}
-
 onMounted(async () => {
   await load(getAudioContext());
 })
@@ -42,7 +32,7 @@ onMounted(async () => {
 <template>
   <div class="challengeContainer">
     <h1>{{ props.prompt }}</h1>
-    <div id="btnPlayAudio" @click="handleClickPlayAudio">
+    <div id="btnPlayAudio" @click="emit('play')">
       <p>Play Audio</p>
       <span class="material-symbols-outlined">play_arrow</span>
       <div class="padding"></div>
