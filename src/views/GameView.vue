@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AnswersComponent from '@/components/answers/AnswersComponent.vue'
 import AudioChallengeComponent from '@/components/challenge/AudioChallengeComponent.vue'
+import TopAppBar from '@/components/TopAppBar.vue'
 
 const choices = [
   'Same Note',
@@ -20,6 +21,7 @@ const choices = [
 
 <template>
   <div class="container">
+    <TopAppBar id="topAppBar" />
     <AudioChallengeComponent id="challenge" prompt="Identify the intervall..." />
     <div class="divider"></div>
     <AnswersComponent id="answers" :answers="choices" />
@@ -41,10 +43,12 @@ const choices = [
   padding: 1px;
   /*margin: 0.3rem 0;*/
 }
+#topAppBar {
+}
 #challenge{
-  flex: 3;
+  flex: 5;
 }
 #answers {
-  flex: 2;
+  flex: 6;
 }
 </style>
