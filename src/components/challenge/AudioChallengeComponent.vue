@@ -18,6 +18,8 @@ const props = defineProps<{ prompt: string }>()
   padding: 0 1rem;
   display: flex;
   flex-direction: column;
+
+  padding-bottom: 0.5rem;
 }
 h1 {
   flex-grow: 1;
@@ -27,7 +29,7 @@ h1 {
 
   background: white;
   border-radius: 0.3rem;
-  margin: 0.3rem 0;
+  margin-bottom: 0.3rem;
   border: 4px solid black;
 }
 #btnPlayAudio {

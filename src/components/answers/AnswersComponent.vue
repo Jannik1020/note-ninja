@@ -27,14 +27,13 @@ const props = defineProps<AnswersProps>()
   scroll-snap-type: y mandatory;
 }
 
-/*
-.container::before {
+/*necessary to display gap before first answers*/
+.answersContainer::before {
   content: '';
   grid-column-start: 1;
   grid-column-end: 3;
-  padding: 1em;
 }
-*/
+
 
 .answersContainer::after {
   content: '';

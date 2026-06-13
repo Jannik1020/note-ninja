@@ -33,13 +33,14 @@ const choices = [
   flex-direction: column;
 
   height: 100vh;
+  padding: 0.5rem 0;
 
   background-color: #fff1ac;
 }
 .divider {
   background-color: black;
   padding: 1px;
-  margin: 0.3rem 0;
+  //margin: 0.3rem 0;
 }
 #challenge{
   flex: 3;
