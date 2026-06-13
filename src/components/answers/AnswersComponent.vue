@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import AnswerButton from '@/components/answers/AnswerButton.vue'
+import AnswerButton, { type AnswerButtonState } from '@/components/answers/AnswerButton.vue'
 
-interface Answer {
+export interface Answer {
   text: string
   selected: boolean
+  state: AnswerButtonState
 }
 interface AnswersProps {
   answers: Answer[]
@@ -11,24 +12,20 @@ interface AnswersProps {
 
 const props = defineProps<AnswersProps>()
 const emit = defineEmits<{
-  (e: 'update:answers', value: Answer[]): void
+  (e: 'update:selected', value: {index: number, value: boolean}): void
 }>()
 
-function onSelect(index: number, value: boolean) {
-  const updated = props.answers.map((answer, i) => (i === index ? { ...answer, selected: value } : answer))
-
-  emit('update:answers', updated)
-}
 </script>
 
 <template>
   <div class="answersContainer">
     <AnswerButton
-      v-for="({ text, selected }, index) in props.answers"
+      v-for="({ text, selected, state}, index) in props.answers"
       :key="index"
       :answerText="text"
       :selected="selected"
-      @update:selected="onSelect(index, $event)"
+      :state="state"
+      @update:selected="emit('update:selected', {index: index, value: $event})"
     />
   </div>
 </template>

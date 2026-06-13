@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
+
+export type AnswerButtonState ='correct' | 'incorrect' | '';
 
 interface AnswerButtonProps {
   answerText: string
   selected?: boolean
   lockSelection?: boolean
-  correct?: 'correct' | 'incorrect' | ''
+  state?: AnswerButtonState
 }
 
 const props = withDefaults(defineProps<AnswerButtonProps>(), {
   selected: false,
   lockSelection: false,
-  correct: '',
+  state: '',
 })
 
 const emit = defineEmits<{
@@ -36,7 +38,7 @@ const className = computed(() => {
   if (props.selected) {
     str += 'selected '
   }
-  str += props.correct
+  str += props.state
   return str
 })
 </script>

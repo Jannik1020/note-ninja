@@ -3,6 +3,7 @@ import AnswersComponent from '@/components/answers/AnswersComponent.vue'
 import AudioChallengeComponent from '@/components/challenge/AudioChallengeComponent.vue'
 import TopAppBar from '@/components/TopAppBar.vue'
 import { ref } from 'vue'
+import type { AnswerButtonState } from '@/components/answers/AnswerButton.vue'
 
 const choices = [
   'Same Note',
@@ -18,7 +19,22 @@ const choices = [
   'Major 7th',
   'Octave',
 ]
-const choicesState = ref(choices.map((value) => ({ text: value, selected: false })))
+const choicesState = ref(
+  choices.map((value) => ({ text: value, selected: false, state: '' as AnswerButtonState })),
+)
+function handleSelection({ index, value }: { index: number; value: boolean }) {
+  if (value) {
+    if (index === choicesState.value.length - 1) {
+      choicesState.value[index]!.state = 'correct'
+    } else {
+      choicesState.value[index]!.state = 'incorrect'
+    }
+  } else {
+    choicesState.value[index]!.state = ''
+  }
+
+  choicesState.value[index]!.selected = value;
+}
 </script>
 
 <template>
@@ -26,11 +42,7 @@ const choicesState = ref(choices.map((value) => ({ text: value, selected: false 
     <TopAppBar id="topAppBar" />
     <AudioChallengeComponent id="challenge" prompt="Identify the interval..." />
     <div class="divider"></div>
-    <AnswersComponent
-      id="answers"
-      :answers="choicesState"
-      @update:answers="choicesState = $event"
-    />
+    <AnswersComponent id="answers" :answers="choicesState" @update:selected="handleSelection" />
   </div>
 </template>
 
