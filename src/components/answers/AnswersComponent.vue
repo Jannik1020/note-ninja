@@ -19,7 +19,7 @@ const props = defineProps<AnswersProps>()
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5em;
-  padding: 0 1em;
+  padding: 0 var(--horizontal-app-padding);
 
   height: 100%;
   overflow-y: auto;

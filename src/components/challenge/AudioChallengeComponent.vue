@@ -15,11 +15,10 @@ const props = defineProps<{ prompt: string }>()
 
 <style scoped>
 .challengeContainer {
-  padding: 0 1rem;
   display: flex;
   flex-direction: column;
 
-  padding-bottom: 0.5rem;
+  padding: 0 var(--horizontal-app-padding) 0.5rem;
 }
 h1 {
   flex-grow: 1;
