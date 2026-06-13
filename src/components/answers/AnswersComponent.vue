@@ -27,12 +27,14 @@ const props = defineProps<AnswersProps>()
   scroll-snap-type: y mandatory;
 }
 
+/*
 .container::before {
   content: '';
   grid-column-start: 1;
   grid-column-end: 3;
   padding: 1em;
 }
+*/
 
 .container::after {
   content: '';
