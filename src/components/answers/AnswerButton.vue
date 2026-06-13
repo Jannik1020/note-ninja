@@ -21,6 +21,7 @@ p {
 }
 div {
   border: 4px solid black;
+  border-radius: 0.1em;
   background-color: white;
 
   scroll-snap-align: center;

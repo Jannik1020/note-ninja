@@ -9,13 +9,13 @@ const props = defineProps<AnswersProps>()
 </script>
 
 <template>
-  <div class="container">
+  <div class="answersContainer">
     <AnswerButton v-for="(answer, index) in props.answers" :key="index" :answerText="answer" />
   </div>
 </template>
 
 <style scoped>
-.container {
+.answersContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5em;
@@ -36,7 +36,7 @@ const props = defineProps<AnswersProps>()
 }
 */
 
-.container::after {
+.answersContainer::after {
   content: '';
   grid-column-start: 1;
   grid-column-end: 3;

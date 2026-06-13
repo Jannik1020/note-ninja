@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AnswersComponent from '@/components/answers/AnswersComponent.vue'
 import ChallengeComponent from '@/components/challenge/ChallengeComponent.vue'
+import AudioChallengeComponent from '@/components/challenge/AudioChallengeComponent.vue'
 
 const choices = [
   'Same Note',
@@ -19,15 +20,15 @@ const choices = [
 </script>
 
 <template>
-  <div>
-    <ChallengeComponent />
-    <hr/>
-    <AnswersComponent :answers="choices" />
+  <div class="container">
+    <AudioChallengeComponent id="challenge" prompt="Identify the intervall..." />
+    <div class="divider"></div>
+    <AnswersComponent id="answers" :answers="choices" />
   </div>
 </template>
 
 <style scoped>
-div {
+.container {
   display: flex;
   flex-direction: column;
 
@@ -35,10 +36,15 @@ div {
 
   background-color: #fff1ac;
 }
-hr {
-  margin: 0.5em 0;
+.divider {
+  background-color: black;
+  padding: 1px;
+  margin: 0.3rem 0;
 }
-div > * {
-  //flex: 1;
+#challenge{
+  flex: 3;
+}
+#answers {
+  flex: 2;
 }
 </style>
