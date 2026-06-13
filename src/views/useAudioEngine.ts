@@ -28,5 +28,27 @@ export function useAudioEngine() {
     src.start()
   }
 
-  return { load, play }
+  async function playPitchShifted(name: string, semitonesShifted: number) {
+    if (ctx.state === 'suspended') {
+      await ctx.resume()
+    }
+
+    const buffer = buffers.get(name)
+    if (!buffer) return
+
+    const src = ctx.createBufferSource()
+    src.buffer = buffer
+
+    if (src.detune) {
+      src.detune.value = semitonesShifted * 100
+    } else {
+      // fallback to using playbackRate for pitch shifting
+      src.playbackRate.value = 2 ** (semitonesShifted / 12)
+    }
+
+    src.connect(ctx.destination)
+    src.start()
+  }
+
+  return { load, play, playPitchShifted }
 }
