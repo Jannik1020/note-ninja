@@ -1,31 +1,28 @@
 <script setup lang="ts">
-import AnswerButton, { type AnswerButtonState } from '@/components/answers/AnswerButton.vue'
+import AnswerButton, {
+  type AnswerButtonProps,
+  type AnswerButtonState,
+} from '@/components/answers/AnswerButton.vue'
 
-export interface Answer {
-  text: string
-  selected: boolean
-  state: AnswerButtonState
-}
 interface AnswersProps {
-  answers: Answer[]
+  answers: AnswerButtonProps[]
 }
 
 const props = defineProps<AnswersProps>()
 const emit = defineEmits<{
-  (e: 'update:selected', value: {index: number, value: boolean}): void
+  (e: 'update:selected', value: { index: number; value: boolean }): void
 }>()
-
 </script>
 
 <template>
   <div class="answersContainer">
     <AnswerButton
-      v-for="({ text, selected, state}, index) in props.answers"
+      v-for="({ text, selected, state }, index) in props.answers"
       :key="index"
-      :answerText="text"
+      :text="text"
       :selected="selected"
       :state="state"
-      @update:selected="emit('update:selected', {index: index, value: $event})"
+      @update:selected="emit('update:selected', { index: index, value: $event })"
     />
   </div>
 </template>

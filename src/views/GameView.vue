@@ -4,6 +4,7 @@ import AudioChallengeComponent from '@/components/challenge/AudioChallengeCompon
 import TopAppBar from '@/components/TopAppBar.vue'
 import { ref } from 'vue'
 import type { AnswerButtonState } from '@/components/answers/AnswerButton.vue'
+import { useGameState } from '@/views/useGameState.ts'
 
 const choices = [
   'Same Note',
@@ -19,6 +20,7 @@ const choices = [
   'Major 7th',
   'Octave',
 ]
+/*
 const choicesState = ref(
   choices.map((value) => ({ text: value, selected: false, state: '' as AnswerButtonState })),
 )
@@ -34,7 +36,13 @@ function handleSelection({ index, value }: { index: number; value: boolean }) {
   }
 
   choicesState.value[index]!.selected = value;
-}
+}*/
+
+const {choicesState, handleSelection} = useGameState(choices.map(value => ({
+  text: value,
+  correct: ["Octave", "Minor 3rd"].includes(value)
+})));
+
 </script>
 
 <template>

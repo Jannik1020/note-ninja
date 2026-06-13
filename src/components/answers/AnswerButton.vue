@@ -3,8 +3,8 @@ import { computed } from 'vue'
 
 export type AnswerButtonState ='correct' | 'incorrect' | '';
 
-interface AnswerButtonProps {
-  answerText: string
+export interface AnswerButtonProps {
+  text: string
   selected?: boolean
   lockSelection?: boolean
   state?: AnswerButtonState
@@ -21,7 +21,7 @@ const emit = defineEmits<{
 }>()
 
 function handleClick() {
-  console.log(`clicked ${props.answerText}`)
+  console.log(`clicked ${props.text}`)
   if (props.lockSelection) {
     if (props.selected) {
       return
@@ -45,7 +45,7 @@ const className = computed(() => {
 
 <template>
   <div :class="className" @click="handleClick">
-    <p>{{ props.answerText }}</p>
+    <p>{{ props.text }}</p>
   </div>
 </template>
 
