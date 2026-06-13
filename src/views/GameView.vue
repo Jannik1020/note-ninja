@@ -2,6 +2,7 @@
 import AnswersComponent from '@/components/answers/AnswersComponent.vue'
 import AudioChallengeComponent from '@/components/challenge/AudioChallengeComponent.vue'
 import TopAppBar from '@/components/TopAppBar.vue'
+import { reactive, ref } from 'vue'
 
 const choices = [
   'Same Note',
@@ -17,14 +18,19 @@ const choices = [
   'Major 7th',
   'Octave',
 ]
+const choicesState = ref(choices.map((value) => ({ text: value, selected: false })))
 </script>
 
 <template>
   <div class="container">
     <TopAppBar id="topAppBar" />
-    <AudioChallengeComponent id="challenge" prompt="Identify the intervall..." />
+    <AudioChallengeComponent id="challenge" prompt="Identify the interval..." />
     <div class="divider"></div>
-    <AnswersComponent id="answers" :answers="choices" />
+    <AnswersComponent
+      id="answers"
+      :answers="choicesState"
+      @update:answers="choicesState = $event"
+    />
   </div>
 </template>
 
@@ -45,7 +51,7 @@ const choices = [
 }
 #topAppBar {
 }
-#challenge{
+#challenge {
   flex: 5;
 }
 #answers {

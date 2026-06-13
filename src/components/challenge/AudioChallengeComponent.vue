@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{ prompt: string }>()
-const audioContext = new AudioContext();
+const audioContext = new AudioContext()
 function handleClickPlayAudio() {
   fetch('audio/C4v10.mp3')
     .then((response) => response.arrayBuffer())
@@ -53,6 +53,15 @@ h1 {
   justify-content: stretch;
 
   position: relative;
+
+  transition: 0.2s;
+}
+
+#btnPlayAudio:hover {
+  cursor: pointer;
+  transform: scale(1.01);
+
+  transition: 0.2s;
 }
 
 #btnPlayAudio p {
