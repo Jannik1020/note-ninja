@@ -41,4 +41,5 @@ body {
 
 :root {
   font-size: 25px;
+  --horizontal-app-padding: 0.7rem;
 }
