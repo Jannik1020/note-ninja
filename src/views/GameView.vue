@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import AnswersComponent from '@/components/answers/AnswersComponent.vue'
-import ChallengeComponent from '@/components/challenge/ChallengeComponent.vue'
 import AudioChallengeComponent from '@/components/challenge/AudioChallengeComponent.vue'
 
 const choices = [
@@ -40,7 +39,7 @@ const choices = [
 .divider {
   background-color: black;
   padding: 1px;
-  //margin: 0.3rem 0;
+  /*margin: 0.3rem 0;*/
 }
 #challenge{
   flex: 3;
