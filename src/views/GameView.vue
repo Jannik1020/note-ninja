@@ -2,7 +2,7 @@
 import AnswersComponent from '@/components/answers/AnswersComponent.vue'
 import AudioChallengeComponent from '@/components/challenge/AudioChallengeComponent.vue'
 import TopAppBar from '@/components/TopAppBar.vue'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 
 const choices = [
   'Same Note',

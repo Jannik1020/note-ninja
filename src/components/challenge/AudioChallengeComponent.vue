@@ -1,16 +1,28 @@
 <script setup lang="ts">
 const props = defineProps<{ prompt: string }>()
-const audioContext = new AudioContext()
-function handleClickPlayAudio() {
-  fetch('audio/C4v10.mp3')
-    .then((response) => response.arrayBuffer())
-    .then((buffer) => audioContext.decodeAudioData(buffer))
-    .then((sample) => {
-      const source = audioContext.createBufferSource()
-      source.buffer = sample
-      source.connect(audioContext.destination)
-      source.start(0)
-    })
+
+let audioContext: AudioContext | null = null
+
+function getAudioContext() {
+  if (!audioContext) {
+    audioContext = new AudioContext()
+  }
+  return audioContext;
+}
+
+async function handleClickPlayAudio() {
+  const ctx = getAudioContext();
+
+  await ctx.resume()
+
+  const response = await fetch('audio/C4v10.mp3')
+  const buffer = await response.arrayBuffer()
+  const sample = await ctx.decodeAudioData(buffer)
+
+  const source = ctx.createBufferSource()
+  source.buffer = sample
+  source.connect(ctx.destination)
+  source.start(0)
 }
 </script>
 
