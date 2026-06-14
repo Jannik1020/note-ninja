@@ -48,12 +48,15 @@ const intervals = ref<Interval[]>(
 
 const { challengeInterval, firstNote, secondNote, nextChallenge } = useIntervalEngine(intervals)
 
-const sampleFileFirstNote = computed(()=> (
-  samples.find((value) => value.octave == firstNote.value.octave) ?? {
-    octave: 0,
-    fileName: 'C2v10.mp3',
-  }
-).fileName);
+const sampleFileFirstNote = computed(
+  () =>
+    (
+      samples.find((value) => value.octave == firstNote.value.octave) ?? {
+        octave: 0,
+        fileName: 'C2v10.mp3',
+      }
+    ).fileName,
+)
 
 const sampleFileSecondNote = computed(
   () =>
@@ -65,9 +68,13 @@ const sampleFileSecondNote = computed(
     ).fileName,
 )
 
-onMounted(async () => {
+async function loadIntervalSamples() {
   await load(sampleFileFirstNote.value, `audio/${sampleFileFirstNote.value}`)
   await load(sampleFileSecondNote.value, `audio/${sampleFileSecondNote.value}`)
+}
+
+onMounted(async () => {
+  await loadIntervalSamples()
 })
 
 async function playIntervalChallenge() {
@@ -77,16 +84,24 @@ async function playIntervalChallenge() {
   }, 1000)
 }
 
-function handleCorrectSelection() {
-
-}
-
-const { choicesState, handleSelection } = useGameState(
+const answers = computed(() =>
   choices.map((value, index) => ({
     text: value,
     correct: index === challengeInterval.value.semitones,
   })),
-  handleCorrectSelection
+);
+
+function handleCorrectSelection() {
+  setTimeout(async () => {
+    nextChallenge()
+    await loadIntervalSamples()
+    nextRound(answers.value)
+  }, 1000)
+}
+
+const { choicesState, handleSelection, nextRound } = useGameState(
+  answers.value,
+  handleCorrectSelection,
 )
 </script>
 

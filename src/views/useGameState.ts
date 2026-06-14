@@ -6,15 +6,16 @@ export interface Answer {
   correct: boolean,
 }
 
-export function useGameState(answers: Answer[]) {
+export function useGameState(answers: Answer[], handleCorrectSelection: () => void) {
   const choicesState = ref<({correct: boolean} & AnswerButtonProps)[]>(
-    answers.map((answer) => ({ text: answer.text, correct: answer.correct }))
+    [...answers]
   )
   console.log(choicesState.value);
   function handleSelection({ index, value }: { index: number; value: boolean }) {
     if (value) {
       if (choicesState.value[index]!.correct) {
         choicesState.value[index]!.state = 'correct'
+        handleCorrectSelection()
       } else {
         choicesState.value[index]!.state = 'incorrect'
       }
@@ -24,5 +25,19 @@ export function useGameState(answers: Answer[]) {
 
     choicesState.value[index]!.selected = value
   }
-  return {choicesState, handleSelection};
+
+  function normalizeAnswers(answers: Answer[]) {
+    return answers.map(a => ({
+      text: a.text,
+      correct: a.correct,
+      selected: false,
+      state: '' as AnswerButtonState,
+    }))
+  }
+
+  function nextRound(answers: Answer[]) {
+    choicesState.value = normalizeAnswers(answers);
+  }
+
+  return {choicesState, handleSelection, nextRound};
 }
