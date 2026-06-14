@@ -53,4 +53,17 @@ const emit = defineEmits<{
   grid-column-end: 3;
   padding: 1em;
 }
+
+@media (min-width: 700px) {
+  .answersContainer {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .answersContainer::before {
+    grid-column-end: 4;
+  }
+
+  .answersContainer::after {
+    grid-column-end: 4;
+  }
+}
 </style>
