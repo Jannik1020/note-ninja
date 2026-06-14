@@ -1,0 +1,23 @@
+{
+  "interval": {
+    "challenge": {
+      "title": "Benenne den Intervall...",
+      "play": "Abspielen"
+    },
+    "answers": {
+      "unison": "Prime",
+      "min2nd": "Kleine Sekunde",
+      "maj2nd": "Große Sekunde",
+      "min3rd": "Kleine Terz",
+      "maj3rd": "Große Terz",
+      "p4th": "Quarte",
+      "tritone": "Tritonus",
+      "p5th": "Quinte",
+      "min6th": "Kleine Sexte",
+      "maj6th": "Große Sexte",
+      "min7th": "Kleine Septime",
+      "maj7th": "Große Septime",
+      "octave": "Oktave"
+    }
+  }
+}

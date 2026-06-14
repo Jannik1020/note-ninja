@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{ prompt: string }>()
-const emit = defineEmits<{(e: 'play'):void}>();
+const emit = defineEmits<{ (e: 'play'): void }>()
 
 let audioContext: AudioContext | null = null
 
@@ -25,15 +26,17 @@ async function load(ctx: AudioContext) {
 }
 
 onMounted(async () => {
-  await load(getAudioContext());
+  await load(getAudioContext())
 })
+
+const {t} = useI18n();
 </script>
 
 <template>
   <div class="challengeContainer">
     <h1>{{ props.prompt }}</h1>
     <div id="btnPlayAudio" @click="emit('play')">
-      <p>Play Audio</p>
+      <p>{{t("interval.challenge.play")}}</p>
       <span class="material-symbols-outlined">play_arrow</span>
       <div class="padding"></div>
     </div>

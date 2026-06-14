@@ -1,8 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+</script>
 
 <template>
   <div class="topAppBar">
-    <div class="statsContainer">
+    <div class="statsContainer barGroup">
       <div>
         <p>Score</p>
         <p>13</p>
@@ -12,12 +14,15 @@
         <p>200</p>
       </div>
     </div>
-    <span class="icon material-symbols-outlined">settings</span>
+    <div class="settingsContainer barGroup">
+      <LanguageSwitcher class="icon" />
+      <span class="icon material-symbols-outlined">settings</span>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.statsContainer {
+.barGroup {
   display: flex;
   flex-direction: row;
   gap: 1rem;
@@ -36,7 +41,7 @@
 }
 
 @media (min-width: 1000px) {
-  .statsContainer {
+  .barGroup {
     flex-direction: column;
   }
 }

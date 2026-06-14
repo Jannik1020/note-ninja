@@ -4,8 +4,9 @@ import AudioChallengeComponent from '@/components/challenge/AudioChallengeCompon
 import TopAppBar from '@/components/TopAppBar.vue'
 import { useGameState } from '@/views/useGameState.ts'
 import { useAudioEngine } from '@/views/useAudioEngine.ts'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { type Interval, useIntervalEngine } from '@/views/useIntervalEngine.ts'
+import { useI18n } from 'vue-i18n'
 
 interface PianoSampleFile {
   octave: number
@@ -21,26 +22,45 @@ const samples: PianoSampleFile[] = [
   'C7v10.mp3',
 ].map((path, index) => ({ octave: index + 2, fileName: path }))
 
-const choices = [
-  'Same Note',
-  'Minor 2nd',
-  'Major 2nd',
-  'Minor 3rd',
-  'Major 3rd',
-  'Perfect 4th',
-  'Tritone',
-  'Perfect 5th',
-  'Minor 6th',
-  'Major 6th',
-  'Minor 7th',
-  'Major 7th',
-  'Octave',
-]
+const { t, locale } = useI18n()
 
-const { load, play, playPitchShifted } = useAudioEngine()
+// const choices = [
+//   'Same Note',
+//   'Minor 2nd',
+//   'Major 2nd',
+//   'Minor 3rd',
+//   'Major 3rd',
+//   'Perfect 4th',
+//   'Tritone',
+//   'Perfect 5th',
+//   'Minor 6th',
+//   'Major 6th',
+//   'Minor 7th',
+//   'Major 7th',
+//   'Octave',
+// ]
+
+const getChoices = () => [
+  t('interval.answers.unison'),
+  t('interval.answers.min2nd'),
+  t('interval.answers.maj2nd'),
+  t('interval.answers.min3rd'),
+  t('interval.answers.maj3rd'),
+  t('interval.answers.p4th'),
+  t('interval.answers.tritone'),
+  t('interval.answers.p5th'),
+  t('interval.answers.min6th'),
+  t('interval.answers.maj6th'),
+  t('interval.answers.min7th'),
+  t('interval.answers.maj7th'),
+  t('interval.answers.octave'),
+]
+const choices = ref(getChoices());
+
+const { load, playPitchShifted } = useAudioEngine()
 
 const intervals = ref<Interval[]>(
-  choices.map((intervalName, index) => ({
+  choices.value.map((intervalName, index) => ({
     semitones: index,
     displayName: intervalName,
   })),
@@ -85,7 +105,7 @@ async function playIntervalChallenge() {
 }
 
 const answers = computed(() =>
-  choices.map((value, index) => ({
+  choices.value.map((value, index) => ({
     text: value,
     correct: index === challengeInterval.value.semitones,
   })),
@@ -99,10 +119,15 @@ function handleCorrectSelection() {
   }, 1000)
 }
 
-const { choicesState, handleSelection, nextRound } = useGameState(
+const { choicesState, handleSelection, nextRound, replaceAnswers } = useGameState(
   answers.value,
   handleCorrectSelection,
 )
+
+watch(locale, () => {
+  choices.value = getChoices();
+  replaceAnswers(answers.value);
+})
 </script>
 
 <template>
@@ -110,7 +135,7 @@ const { choicesState, handleSelection, nextRound } = useGameState(
     <TopAppBar id="topAppBar" />
     <AudioChallengeComponent
       id="challenge"
-      prompt="Identify the interval..."
+      :prompt="t('interval.challenge.title')"
       @play="playIntervalChallenge"
     />
     <div class="divider"></div>

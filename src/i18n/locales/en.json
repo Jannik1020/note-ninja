@@ -1,0 +1,23 @@
+{
+  "interval": {
+    "challenge": {
+      "title": "Identify the interval...",
+      "play": "Play Audio"
+    },
+    "answers": {
+      "unison": "Same Note",
+      "min2nd": "Minor 2nd",
+      "maj2nd": "Major 2nd",
+      "min3rd": "Minor 3rd",
+      "maj3rd": "Major 3rd",
+      "p4th": "Perfect 4th",
+      "tritone": "Tritone",
+      "p5th": "Perfect 5th",
+      "min6th": "Minor 6th",
+      "maj6th": "Major 6th",
+      "min7th": "Minor 7th",
+      "maj7th": "Major 7th",
+      "octave": "Octave"
+    }
+  }
+}

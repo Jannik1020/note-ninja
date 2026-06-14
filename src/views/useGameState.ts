@@ -35,9 +35,13 @@ export function useGameState(answers: Answer[], handleCorrectSelection: () => vo
     }))
   }
 
+  function replaceAnswers(answers: Answer[]) {
+    choicesState.value.forEach((value, index) => value.text = answers[index]!.text);
+  }
+
   function nextRound(answers: Answer[]) {
     choicesState.value = normalizeAnswers(answers);
   }
 
-  return {choicesState, handleSelection, nextRound};
+  return {choicesState, handleSelection, nextRound, replaceAnswers};
 }
