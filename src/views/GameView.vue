@@ -55,7 +55,7 @@ const getChoices = () => [
   t('interval.answers.maj7th'),
   t('interval.answers.octave'),
 ]
-const choices = ref(getChoices());
+const choices = ref(getChoices())
 
 const { load, playPitchShifted } = useAudioEngine()
 
@@ -125,8 +125,8 @@ const { choicesState, handleSelection, nextRound, replaceAnswers } = useGameStat
 )
 
 watch(locale, () => {
-  choices.value = getChoices();
-  replaceAnswers(answers.value);
+  choices.value = getChoices()
+  replaceAnswers(answers.value)
 })
 </script>
 
@@ -166,7 +166,7 @@ watch(locale, () => {
 #answers {
   flex: 6;
 }
-@media (min-width: 1000px) {
+@media (min-width: 1000px) and (min-aspect-ratio: 4/3) {
   .container {
     flex-direction: row;
   }

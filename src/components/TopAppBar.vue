@@ -40,7 +40,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
   align-items: center;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 1000px) and (min-aspect-ratio: 4/3) {
   .barGroup {
     flex-direction: column;
   }
