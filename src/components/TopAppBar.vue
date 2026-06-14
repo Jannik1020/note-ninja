@@ -2,7 +2,7 @@
 
 <template>
   <div class="topAppBar">
-    <div class="flexRow">
+    <div class="statsContainer">
       <div>
         <p>Score</p>
         <p>13</p>
@@ -17,7 +17,7 @@
 </template>
 
 <style scoped>
-.flexRow {
+.statsContainer {
   display: flex;
   flex-direction: row;
   gap: 1rem;
@@ -33,5 +33,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media (min-width: 1000px) {
+  .statsContainer {
+    flex-direction: column;
+  }
 }
 </style>

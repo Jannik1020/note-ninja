@@ -89,7 +89,7 @@ const answers = computed(() =>
     text: value,
     correct: index === challengeInterval.value.semitones,
   })),
-);
+)
 
 function handleCorrectSelection() {
   setTimeout(async () => {
@@ -140,5 +140,16 @@ const { choicesState, handleSelection, nextRound } = useGameState(
 }
 #answers {
   flex: 6;
+}
+@media (min-width: 1000px) {
+  .container {
+    flex-direction: row;
+  }
+  #topAppBar {
+    flex-direction: column;
+  }
+  .statsContainer {
+    flex-direction: column;
+  }
 }
 </style>
