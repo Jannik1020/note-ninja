@@ -4,7 +4,8 @@ import AudioChallengeComponent from '@/components/challenge/AudioChallengeCompon
 import TopAppBar from '@/components/TopAppBar.vue'
 import { useGameState } from '@/views/useGameState.ts'
 import { useAudioEngine } from '@/views/useAudioEngine.ts'
-import { onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { type Interval, useIntervalEngine } from '@/views/useIntervalEngine.ts'
 
 interface PianoSampleFile {
   octave: number
@@ -38,60 +39,65 @@ const choices = [
 
 const { load, play, playPitchShifted } = useAudioEngine()
 
-interface Interval {
-  semitones: number
-  displayName: string
-}
-
-const intervals: Interval[] = choices.map((intervalName, index) => ({
-  semitones: index,
-  displayName: intervalName,
-}))
-const challengeInterval: Interval = intervals[Math.floor(Math.random() * intervals.length)]!
-
-const octaveFirstNote = Math.floor(Math.random() * 5) + 2
-const firstNote = Math.floor(Math.random() * 12)
-
-const octaveSecondNote =
-  firstNote + challengeInterval.semitones >= 12 ? octaveFirstNote + 1 : octaveFirstNote
-const secondNote = (firstNote + challengeInterval.semitones) % 12
-
-console.log(
-  `${firstNote} ${octaveFirstNote} => ${secondNote} ${octaveSecondNote} (${challengeInterval.displayName})`,
+const intervals = ref<Interval[]>(
+  choices.map((intervalName, index) => ({
+    semitones: index,
+    displayName: intervalName,
+  })),
 )
 
-const sampleFileFirstNote = (
-  samples.find((value) => value.octave == octaveFirstNote) ?? { octave: 0, fileName: 'C2v10.mp3' }
-).fileName
+const { challengeInterval, firstNote, secondNote, nextChallenge } = useIntervalEngine(intervals)
 
-const sampleFileSecondNote = (
-  samples.find((value) => value.octave == octaveSecondNote) ?? { octave: 0, fileName: 'C2v10.mp3' }
-).fileName
+const sampleFileFirstNote = computed(()=> (
+  samples.find((value) => value.octave == firstNote.value.octave) ?? {
+    octave: 0,
+    fileName: 'C2v10.mp3',
+  }
+).fileName);
+
+const sampleFileSecondNote = computed(
+  () =>
+    (
+      samples.find((value) => value.octave == secondNote.value.octave) ?? {
+        octave: 0,
+        fileName: 'C2v10.mp3',
+      }
+    ).fileName,
+)
 
 onMounted(async () => {
-  await load(sampleFileFirstNote, `audio/${sampleFileFirstNote}`)
-  await load(sampleFileSecondNote, `audio/${sampleFileSecondNote}`)
+  await load(sampleFileFirstNote.value, `audio/${sampleFileFirstNote.value}`)
+  await load(sampleFileSecondNote.value, `audio/${sampleFileSecondNote.value}`)
 })
 
 async function playIntervalChallenge() {
-  await playPitchShifted(sampleFileFirstNote, firstNote)
+  await playPitchShifted(sampleFileFirstNote.value, firstNote.value.semitonesFromC)
   setTimeout(() => {
-    playPitchShifted(sampleFileSecondNote, secondNote)
+    playPitchShifted(sampleFileSecondNote.value, secondNote.value.semitonesFromC)
   }, 1000)
+}
+
+function handleCorrectSelection() {
+
 }
 
 const { choicesState, handleSelection } = useGameState(
   choices.map((value, index) => ({
     text: value,
-    correct: index === challengeInterval.semitones,
+    correct: index === challengeInterval.value.semitones,
   })),
+  handleCorrectSelection
 )
 </script>
 
 <template>
   <div class="container">
     <TopAppBar id="topAppBar" />
-    <AudioChallengeComponent id="challenge" prompt="Identify the interval..." @play="playIntervalChallenge"/>
+    <AudioChallengeComponent
+      id="challenge"
+      prompt="Identify the interval..."
+      @play="playIntervalChallenge"
+    />
     <div class="divider"></div>
     <AnswersComponent id="answers" :answers="choicesState" @update:selected="handleSelection" />
   </div>
