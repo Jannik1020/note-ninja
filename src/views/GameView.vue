@@ -5,7 +5,7 @@ import TopAppBar from '@/components/TopAppBar.vue'
 import { useGameState } from '@/views/useGameState.ts'
 import { useAudioEngine } from '@/views/useAudioEngine.ts'
 import { computed, onMounted, ref, watch } from 'vue'
-import { type Interval, useIntervalEngine } from '@/views/useIntervalEngine.ts'
+import { type Interval, useIntervalChallengeEngine } from '@/views/useIntervalChallengeEngine.js'
 import { useI18n } from 'vue-i18n'
 
 interface PianoSampleFile {
@@ -66,7 +66,7 @@ const intervals = ref<Interval[]>(
   })),
 )
 
-const { challengeInterval, firstNote, secondNote, nextChallenge } = useIntervalEngine(intervals)
+const { challengeInterval, firstNote, secondNote, nextChallenge } = useIntervalChallengeEngine(intervals)
 
 const sampleFileFirstNote = computed(
   () =>

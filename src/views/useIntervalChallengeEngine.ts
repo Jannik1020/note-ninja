@@ -1,4 +1,5 @@
 import { ref, type Ref } from 'vue'
+import { useAudioEngine } from '@/views/useAudioEngine.ts'
 
 export interface Interval {
   semitones: number
@@ -10,7 +11,7 @@ interface Note {
   semitonesFromC: number
 }
 
-export function useIntervalEngine(selectedIntervals: Ref<Interval[]>) {
+export function useIntervalChallengeEngine(selectedIntervals: Ref<Interval[]>) {
   const challengeInterval: Ref<Interval> = ref<Interval>({semitones: 0, displayName: ''})
   const firstNote = ref<Note>({ octave: 0, semitonesFromC: 0 })
   const secondNote = ref<Note>({ octave: 0, semitonesFromC: 0 })
