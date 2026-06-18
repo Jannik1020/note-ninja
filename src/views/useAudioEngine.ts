@@ -28,9 +28,9 @@ export function useAudioEngine() {
     src.start()
   }
 
-  async function playPitchShifted(name: string, semitonesShifted: number) {
+  async function playPitchShifted(name: string, semitonesShifted: number, delaySeconds: number) {
     if (ctx.state === 'suspended') {
-      await ctx.resume()
+      ctx.resume()
     }
 
     const buffer = buffers.get(name)
@@ -47,7 +47,7 @@ export function useAudioEngine() {
     }
 
     src.connect(ctx.destination)
-    src.start()
+    src.start(ctx.currentTime + delaySeconds)
   }
 
   return { load, play, playPitchShifted }

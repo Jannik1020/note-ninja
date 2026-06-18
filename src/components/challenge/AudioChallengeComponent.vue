@@ -1,33 +1,8 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{ prompt: string }>()
 const emit = defineEmits<{ (e: 'play'): void }>()
-
-let audioContext: AudioContext | null = null
-
-function getAudioContext() {
-  if (!audioContext) {
-    audioContext = new AudioContext()
-  }
-  return audioContext
-}
-
-let buffer: AudioBuffer | null = null
-
-async function load(ctx: AudioContext) {
-  if (buffer) return buffer
-
-  const res = await fetch('audio/C4v10.mp3')
-  const arr = await res.arrayBuffer()
-  buffer = await ctx.decodeAudioData(arr)
-  return buffer
-}
-
-onMounted(async () => {
-  await load(getAudioContext())
-})
 
 const {t} = useI18n();
 </script>

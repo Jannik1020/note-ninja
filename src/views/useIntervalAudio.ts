@@ -20,6 +20,9 @@ export function useIntervalAudio(firstNote: Ref<Note>, secondNote: Ref<Note>, in
     'C7v10.mp3',
   ].map((path, index) => ({ octave: index + 2, fileName: path }))
 
+
+  const buffers = new Map<string, AudioBuffer>()
+
   const fileNameFirstNoteSample = computed(
     () =>
       (
@@ -43,26 +46,21 @@ export function useIntervalAudio(firstNote: Ref<Note>, secondNote: Ref<Note>, in
   const { load, playPitchShifted } = useAudioEngine()
 
   async function loadIntervalSamples() {
-    await load(fileNameFirstNoteSample.value, `audio/${fileNameFirstNoteSample.value}`)
-    await load(fileNameSecondNoteSample.value, `audio/${fileNameSecondNoteSample.value}`)
+    samples.forEach((sample) => {load(sample.fileName, `audio/${sample.fileName}`)})
+    //await load(fileNameFirstNoteSample.value, `audio/${fileNameFirstNoteSample.value}`)
+    //await load(fileNameSecondNoteSample.value, `audio/${fileNameSecondNoteSample.value}`)
   }
 
   async function playIntervalChallenge() {
     if(intervalDirection.value == "ascending") {
-      await playPitchShifted(fileNameFirstNoteSample.value, firstNote.value.semitonesFromC)
-      setTimeout(() => {
-        playPitchShifted(fileNameSecondNoteSample.value, secondNote.value.semitonesFromC)
-      }, 1000)
+      playPitchShifted(fileNameFirstNoteSample.value, firstNote.value.semitonesFromC, 0)
+      playPitchShifted(fileNameSecondNoteSample.value, secondNote.value.semitonesFromC, 1)
     } else if (intervalDirection.value == "descending") {
-      await playPitchShifted(fileNameSecondNoteSample.value, secondNote.value.semitonesFromC)
-      setTimeout(() => {
-        playPitchShifted(fileNameFirstNoteSample.value, firstNote.value.semitonesFromC)
-        }, 1000)
+      playPitchShifted(fileNameSecondNoteSample.value, secondNote.value.semitonesFromC, 0)
+      playPitchShifted(fileNameFirstNoteSample.value, firstNote.value.semitonesFromC, 1)
     } else if(intervalDirection.value === "simultaneous") {
-      await playPitchShifted(fileNameFirstNoteSample.value, firstNote.value.semitonesFromC)
-      setTimeout(() => {
-        playPitchShifted(fileNameSecondNoteSample.value, secondNote.value.semitonesFromC)
-      }, 0);
+      playPitchShifted(fileNameSecondNoteSample.value, secondNote.value.semitonesFromC, 0)
+      playPitchShifted(fileNameFirstNoteSample.value, firstNote.value.semitonesFromC, 0)
     }
   }
 
