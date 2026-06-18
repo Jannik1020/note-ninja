@@ -1,6 +1,6 @@
 import { ref, type Ref } from 'vue'
-import { useAudioEngine } from '@/views/useAudioEngine.ts'
-import type { ChallengeMode } from '@/stores/intervals.ts'
+import type { ChallengeMode, Direction } from '@/stores/intervals.ts'
+import { getSecureRandomInRange } from '@/utils.ts'
 
 export interface Interval {
   semitones: number
@@ -11,20 +11,12 @@ export interface Note {
   semitonesFromC: number
 }
 
-function getSecureRandomInRange(min: number, max: number) {
-  const range = max - min
-  const array = new Uint32Array(1)
-  crypto.getRandomValues(array)
-  return min + (array[0]! % (range + 1))
-}
 
-
-
-export function useIntervalChallengeEngine(selectedIntervals: Ref<Interval[]>) {
+export function useIntervalChallengeEngine(selectedIntervals: Ref<Interval[]>, challengeMode: Ref<ChallengeMode>) {
   const challengeInterval: Ref<Interval> = ref<Interval>({semitones: 0})
   const firstNote = ref<Note>({ octave: 0, semitonesFromC: 0 })
   const secondNote = ref<Note>({ octave: 0, semitonesFromC: 0 })
-  const challengeMode = ref<ChallengeMode>("ascending");
+  const challengeIntervalDirection = ref<Direction>('ascending')
 
   function nextIntervalChallenge() {
     const _challengeInterval = selectedIntervals.value[getSecureRandomInRange(0, selectedIntervals.value.length - 1)]!
@@ -37,12 +29,20 @@ export function useIntervalChallengeEngine(selectedIntervals: Ref<Interval[]>) {
     challengeInterval.value = _challengeInterval;
     firstNote.value = { octave: octaveFirstNote, semitonesFromC: firstNoteSemitonsFromC }
     secondNote.value = { octave: octaveSecondNote, semitonesFromC: secondNoteSemitonsFromC }
-    challengeMode.value = getSecureRandomInRange(0,1) === 0 ? "ascending" : "descending";
+    challengeIntervalDirection.value = challengeMode.value === "both"
+      ? (getSecureRandomInRange(0, 1) === 0 ? 'ascending' : 'descending')
+      : challengeMode.value;
 
     console.log("New challenge interval: ", challengeInterval.value.semitones);
   }
 
   nextIntervalChallenge();
 
-  return { challengeInterval, challengeMode, firstNote, secondNote, nextIntervalChallenge: nextIntervalChallenge, }
+  return {
+    challengeInterval,
+    challengeIntervalDirection,
+    firstNote,
+    secondNote,
+    nextIntervalChallenge: nextIntervalChallenge,
+  }
 }

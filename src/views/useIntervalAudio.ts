@@ -1,9 +1,9 @@
-import { computed, onMounted, ref, type Ref, watch, watchEffect } from 'vue'
+import { computed, onMounted, type Ref, watch } from 'vue'
 import type { Note } from '@/views/useIntervalChallengeEngine.ts'
 import { useAudioEngine } from '@/views/useAudioEngine.ts'
-import type { ChallengeMode } from '@/stores/intervals.ts'
+import type { Direction } from '@/stores/intervals.ts'
 
-export function useIntervalAudio(firstNote: Ref<Note>, secondNote: Ref<Note>, challengeMode: Ref<ChallengeMode>) {
+export function useIntervalAudio(firstNote: Ref<Note>, secondNote: Ref<Note>, intervalDirection: Ref<Direction>) {
 
   interface PianoSampleFile {
     octave: number
@@ -48,16 +48,21 @@ export function useIntervalAudio(firstNote: Ref<Note>, secondNote: Ref<Note>, ch
   }
 
   async function playIntervalChallenge() {
-    if(challengeMode.value == "ascending") {
+    if(intervalDirection.value == "ascending") {
       await playPitchShifted(fileNameFirstNoteSample.value, firstNote.value.semitonesFromC)
       setTimeout(() => {
         playPitchShifted(fileNameSecondNoteSample.value, secondNote.value.semitonesFromC)
       }, 1000)
-    } else {
+    } else if (intervalDirection.value == "descending") {
       await playPitchShifted(fileNameSecondNoteSample.value, secondNote.value.semitonesFromC)
       setTimeout(() => {
         playPitchShifted(fileNameFirstNoteSample.value, firstNote.value.semitonesFromC)
         }, 1000)
+    } else if(intervalDirection.value === "simultaneous") {
+      await playPitchShifted(fileNameFirstNoteSample.value, firstNote.value.semitonesFromC)
+      setTimeout(() => {
+        playPitchShifted(fileNameSecondNoteSample.value, secondNote.value.semitonesFromC)
+      }, 0);
     }
   }
 

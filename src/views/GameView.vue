@@ -2,29 +2,38 @@
 import AnswersComponent from '@/components/answers/AnswersComponent.vue'
 import AudioChallengeComponent from '@/components/challenge/AudioChallengeComponent.vue'
 import TopAppBar from '@/components/TopAppBar.vue'
-import { type Answer, useGameState } from '@/views/useGameState.ts'
-import { useAudioEngine } from '@/views/useAudioEngine.ts'
-import { computed, onMounted, ref, watch } from 'vue'
-import { type Interval, useIntervalChallengeEngine } from '@/views/useIntervalChallengeEngine.js'
+import { useGameState } from '@/views/useGameState.ts'
+import { computed, onMounted, ref } from 'vue'
+import { useIntervalChallengeEngine } from '@/views/useIntervalChallengeEngine.js'
 import { useI18n } from 'vue-i18n'
-import { useIntervalsStore } from '@/stores/intervals.ts'
+import { type ChallengeMode, useIntervalsStore } from '@/stores/intervals.ts'
 import { storeToRefs } from 'pinia'
 import { useIntervalAudio } from '@/views/useIntervalAudio.ts'
 
-
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
 const intervalStore = useIntervalsStore()
-const {intervals} = storeToRefs(intervalStore)
+const { intervals } = storeToRefs(intervalStore)
 
-const { challengeInterval, challengeMode, firstNote, secondNote, nextIntervalChallenge } =
-  useIntervalChallengeEngine(intervals)
-const {playIntervalChallenge} = useIntervalAudio(firstNote, secondNote, challengeMode);
+const challengeMode = ref<ChallengeMode>('ascending')
+
+const {
+  challengeInterval,
+  challengeIntervalDirection,
+  firstNote,
+  secondNote,
+  nextIntervalChallenge,
+} = useIntervalChallengeEngine(intervals, challengeMode)
+const { playIntervalChallenge } = useIntervalAudio(
+  firstNote,
+  secondNote,
+  challengeIntervalDirection,
+)
 
 const answers = computed(() => {
   return intervals.value.map((i) => ({
     i18nKey: i.i18nKey,
-    correct: i.semitones === challengeInterval.value.semitones
+    correct: i.semitones === challengeInterval.value.semitones,
   }))
 })
 const { choices, handleSelection, startGameRound } = useGameState(
@@ -42,7 +51,7 @@ const wrongAnswers = ref<number>(0)
 
 function handleCorrectSelection() {
   setTimeout(async () => {
-    intervalStore.updateStats(challengeInterval.value.semitones, 'ascending', wrongAnswers.value)
+    intervalStore.updateStats(challengeInterval.value.semitones, challengeIntervalDirection.value, wrongAnswers.value)
     console.log(
       intervalStore.intervals.map(
         (i) => `${i.i18nKey}: ${i.statistics.ascending.wrongUntilCorrect.toString()}`,
@@ -66,7 +75,7 @@ function handleWrongSelection() {
 
 <template>
   <div class="container">
-    <TopAppBar id="topAppBar" />
+    <TopAppBar id="topAppBar" v-model="challengeMode" />
     <AudioChallengeComponent
       id="challenge"
       :prompt="t('interval.challenge.title')"

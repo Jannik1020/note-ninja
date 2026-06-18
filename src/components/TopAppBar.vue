@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+import ModeSelector from '@/components/ModeSelector.vue'
+import type { ChallengeMode } from '@/stores/intervals.ts'
+
+const challengeMode = defineModel<ChallengeMode>({
+  required: true,
+})
+
+
 </script>
 
 <template>
@@ -15,6 +23,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
       </div>
     </div>
     <div class="settingsContainer barGroup">
+      <ModeSelector class="icon" v-model="challengeMode"/>
       <LanguageSwitcher class="icon" />
       <span class="icon material-symbols-outlined">settings</span>
     </div>
@@ -38,6 +47,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 @media (min-width: 1000px) and (min-aspect-ratio: 4/3) {

@@ -5,15 +5,14 @@ interface IntervalStats {
   wrongUntilCorrect: number[]
 }
 
+
 interface StoredInterval {
   semitones: number
   i18nKey: string
-  statistics: {
-    ascending: IntervalStats
-    descending: IntervalStats
-  }
+  statistics: Record<Direction, IntervalStats>
 }
-export type ChallengeMode = "ascending" | "descending" | "melody";
+export type ChallengeMode = "ascending" | "descending" | "both" | "simultaneous";
+export type Direction = Exclude<ChallengeMode, 'both'>
 
 export interface GameInterval {
   semitones: number
@@ -47,6 +46,9 @@ export const useIntervalsStore = defineStore('intervals', () => {
         descending: {
           wrongUntilCorrect: [],
         },
+        simultaneous: {
+          wrongUntilCorrect: []
+        }
       },
     })),
   )
@@ -57,14 +59,15 @@ export const useIntervalsStore = defineStore('intervals', () => {
     }))
   );
 
-  function updateStats(semitones: number, mode:ChallengeMode, wrongAnswersUntilCorrect: number) {
+  function updateStats(semitones: number, mode:Direction, wrongAnswersUntilCorrect: number) {
+    console.log('update stats', semitones, mode)
     const interval = intervals.value[semitones]
     if (!interval) {
       throw new Error(
         `Cannot update stats for interval with ${semitones} semitones, interval not found`,
       )
     }
-    interval.statistics.ascending.wrongUntilCorrect.push(wrongAnswersUntilCorrect)
+    interval.statistics[mode].wrongUntilCorrect.push(wrongAnswersUntilCorrect)
   }
   return { intervals, gameIntervals, updateStats }
 }, {
