@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { useI18n } from 'vue-i18n'
 
 export const useCounterStore = defineStore('counter', () => {
   const count = ref(0)

@@ -3,26 +3,30 @@ import AnswerButton, {
   type AnswerButtonProps,
   type AnswerButtonState,
 } from '@/components/answers/AnswerButton.vue'
+import { useI18n } from 'vue-i18n'
 
+export type AnswerButtonPropsI18N = Omit<AnswerButtonProps, "text"> & {i18nKey: string}
 interface AnswersProps {
-  answers: AnswerButtonProps[]
+  answers: AnswerButtonPropsI18N[]
 }
+
+const {t} = useI18n();
 
 const props = defineProps<AnswersProps>()
 const emit = defineEmits<{
-  (e: 'update:selected', value: { index: number; value: boolean }): void
+  (e: 'update:selected', value: { index: number; selected: boolean }): void
 }>()
 </script>
 
 <template>
   <div class="answersContainer">
     <AnswerButton
-      v-for="({ text, selected, state }, index) in props.answers"
+      v-for="({ i18nKey, selected, state }, index) in props.answers"
       :key="index"
-      :text="text"
+      :text="t(i18nKey)"
       :selected="selected"
       :state="state"
-      @update:selected="emit('update:selected', { index: index, value: $event })"
+      @update:selected="emit('update:selected', { index: index, selected: $event })"
     />
   </div>
 </template>

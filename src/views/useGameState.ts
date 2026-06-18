@@ -1,47 +1,40 @@
-import { ref } from 'vue'
+import { type Ref, ref } from 'vue'
 import type { AnswerButtonProps, AnswerButtonState } from '@/components/answers/AnswerButton.vue'
+import type { AnswerButtonPropsI18N } from '@/components/answers/AnswersComponent.vue'
 
 export interface Answer {
-  text: string,
+  i18nKey: string,
   correct: boolean,
 }
 
-export function useGameState(answers: Answer[], handleCorrectSelection: () => void) {
-  const choicesState = ref<({correct: boolean} & AnswerButtonProps)[]>(
-    [...answers]
+export function useGameState(answers: Ref<Answer[]>, onCorrect: () => void, onWrong: () => void) {
+  const choices = ref<({correct: boolean} & AnswerButtonPropsI18N)[]>(
+    []
   )
-  console.log(choicesState.value);
-  function handleSelection({ index, value }: { index: number; value: boolean }) {
-    if (value) {
-      if (choicesState.value[index]!.correct) {
-        choicesState.value[index]!.state = 'correct'
-        handleCorrectSelection()
-      } else {
-        choicesState.value[index]!.state = 'incorrect'
-      }
-    } else {
-      choicesState.value[index]!.state = ''
-    }
 
-    choicesState.value[index]!.selected = value
-  }
-
-  function normalizeAnswers(answers: Answer[]) {
-    return answers.map(a => ({
-      text: a.text,
-      correct: a.correct,
+  function startGameRound() {
+    choices.value = answers.value.map((a) => ({
+      ...a,
       selected: false,
       state: '' as AnswerButtonState,
     }))
   }
 
-  function replaceAnswers(answers: Answer[]) {
-    choicesState.value.forEach((value, index) => value.text = answers[index]!.text);
+  function handleSelection({ index, selected }: { index: number; selected: boolean }) {
+    const choice = choices.value[index];
+    if (selected) {
+      if (choice!.correct) {
+        choice!.state = 'correct'
+        onCorrect()
+      } else {
+        choice!.state = 'incorrect'
+        onWrong()
+      }
+    } else {
+      choice!.state = ''
+    }
+    choice!.selected = selected
   }
 
-  function nextRound(answers: Answer[]) {
-    choicesState.value = normalizeAnswers(answers);
-  }
-
-  return {choicesState, handleSelection, nextRound, replaceAnswers};
+  return { choices: choices, startGameRound, handleSelection};
 }
