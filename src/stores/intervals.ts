@@ -13,7 +13,7 @@ interface StoredInterval {
     descending: IntervalStats
   }
 }
-type Mode = "ascending" | "descending" | "melody";
+export type ChallengeMode = "ascending" | "descending" | "melody";
 
 export interface GameInterval {
   semitones: number
@@ -57,7 +57,7 @@ export const useIntervalsStore = defineStore('intervals', () => {
     }))
   );
 
-  function updateStats(semitones: number, mode:Mode, wrongAnswersUntilCorrect: number) {
+  function updateStats(semitones: number, mode:ChallengeMode, wrongAnswersUntilCorrect: number) {
     const interval = intervals.value[semitones]
     if (!interval) {
       throw new Error(

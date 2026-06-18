@@ -1,8 +1,9 @@
 import { computed, onMounted, ref, type Ref, watch, watchEffect } from 'vue'
 import type { Note } from '@/views/useIntervalChallengeEngine.ts'
 import { useAudioEngine } from '@/views/useAudioEngine.ts'
+import type { ChallengeMode } from '@/stores/intervals.ts'
 
-export function useIntervalAudio(firstNote: Ref<Note>, secondNote: Ref<Note>) {
+export function useIntervalAudio(firstNote: Ref<Note>, secondNote: Ref<Note>, challengeMode: Ref<ChallengeMode>) {
 
   interface PianoSampleFile {
     octave: number
@@ -47,10 +48,17 @@ export function useIntervalAudio(firstNote: Ref<Note>, secondNote: Ref<Note>) {
   }
 
   async function playIntervalChallenge() {
-    await playPitchShifted(fileNameFirstNoteSample.value, firstNote.value.semitonesFromC)
-    setTimeout(() => {
-      playPitchShifted(fileNameSecondNoteSample.value, secondNote.value.semitonesFromC)
-    }, 1000)
+    if(challengeMode.value == "ascending") {
+      await playPitchShifted(fileNameFirstNoteSample.value, firstNote.value.semitonesFromC)
+      setTimeout(() => {
+        playPitchShifted(fileNameSecondNoteSample.value, secondNote.value.semitonesFromC)
+      }, 1000)
+    } else {
+      await playPitchShifted(fileNameSecondNoteSample.value, secondNote.value.semitonesFromC)
+      setTimeout(() => {
+        playPitchShifted(fileNameFirstNoteSample.value, firstNote.value.semitonesFromC)
+        }, 1000)
+    }
   }
 
   onMounted(async () => {

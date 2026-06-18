@@ -17,9 +17,9 @@ const { t, locale } = useI18n()
 const intervalStore = useIntervalsStore()
 const {intervals} = storeToRefs(intervalStore)
 
-const { challengeInterval, firstNote, secondNote, nextIntervalChallenge } =
+const { challengeInterval, challengeMode, firstNote, secondNote, nextIntervalChallenge } =
   useIntervalChallengeEngine(intervals)
-const {playIntervalChallenge} = useIntervalAudio(firstNote, secondNote);
+const {playIntervalChallenge} = useIntervalAudio(firstNote, secondNote, challengeMode);
 
 const answers = computed(() => {
   return intervals.value.map((i) => ({
