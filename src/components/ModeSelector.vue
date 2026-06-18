@@ -8,18 +8,18 @@ const challengeMode = defineModel<ChallengeMode>({
 
 const nextModeMapping: Record<ChallengeMode, ChallengeMode> = {
   ascending: 'descending',
-  descending: 'both',
-  both: 'simultaneous',
+  descending: 'random',
+  random: 'simultaneous',
   simultaneous: 'ascending',
 }
 const modeIconMapping: Record<ChallengeMode, string> = {
   ascending: 'north',
   descending: 'south',
-  both: 'sync_alt',
+  random: 'sync_alt',
   simultaneous: 'equal',
 }
 const rotateIcon = computed(() => {
-  return challengeMode.value in ['both', "simultaneous"]
+  return challengeMode.value === "random"
 })
 
 function handleClick() {

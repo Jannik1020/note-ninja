@@ -11,8 +11,8 @@ interface StoredInterval {
   i18nKey: string
   statistics: Record<Direction, IntervalStats>
 }
-export type ChallengeMode = "ascending" | "descending" | "both" | "simultaneous";
-export type Direction = Exclude<ChallengeMode, 'both'>
+export type ChallengeMode = 'ascending' | 'descending' | 'simultaneous' | 'random'
+export type Direction = Exclude<ChallengeMode, 'random'>
 
 export interface GameInterval {
   semitones: number

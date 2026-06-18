@@ -29,8 +29,8 @@ export function useIntervalChallengeEngine(selectedIntervals: Ref<Interval[]>, c
     challengeInterval.value = _challengeInterval;
     firstNote.value = { octave: octaveFirstNote, semitonesFromC: firstNoteSemitonsFromC }
     secondNote.value = { octave: octaveSecondNote, semitonesFromC: secondNoteSemitonsFromC }
-    challengeIntervalDirection.value = challengeMode.value === "both"
-      ? (getSecureRandomInRange(0, 1) === 0 ? 'ascending' : 'descending')
+    challengeIntervalDirection.value = challengeMode.value === "random"
+      ? (["ascending", "descending", "simultaneous"][getSecureRandomInRange(0, 2)] as Direction)
       : challengeMode.value;
 
     console.log("New challenge interval: ", challengeInterval.value.semitones);
