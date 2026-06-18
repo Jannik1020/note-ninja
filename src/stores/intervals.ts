@@ -67,4 +67,8 @@ export const useIntervalsStore = defineStore('intervals', () => {
     interval.statistics.ascending.wrongUntilCorrect.push(wrongAnswersUntilCorrect)
   }
   return { intervals, gameIntervals, updateStats }
+}, {
+  persist: {
+    pick: ["intervals"]
+  }
 })
